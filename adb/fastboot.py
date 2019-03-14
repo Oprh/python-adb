@@ -312,7 +312,7 @@ class FastbootCommands(object):
         """
         if isinstance(source_file, str):
             source_len = os.stat(source_file).st_size
-            source_file = open(source_file)
+            source_file = open(source_file, mode='rb')
 
         with source_file:
             if source_len == 0:
@@ -322,8 +322,7 @@ class FastbootCommands(object):
                 source_len = len(data)
 
             self._protocol.SendCommand(b'download', b'%08x' % source_len)
-            return self._protocol.HandleDataSending(
-                source_file, source_len, info_cb, progress_callback=progress_callback)
+            return self._protocol.HandleDataSending(source_file, source_len, info_cb, progress_callback=progress_callback)
 
     def Flash(self, partition, timeout_ms=0, info_cb=DEFAULT_MESSAGE_CALLBACK):
         """Flashes the last downloaded file to the given partition.
